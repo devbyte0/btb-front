@@ -223,7 +223,7 @@ export default function AdminEnrollmentsPage() {
                 <input placeholder="Promo code (optional)" value={form.promoCode}
                   onChange={(e) => setForm((prev) => ({ ...prev, promoCode: e.target.value }))}
                   className="input-focus-ring w-full rounded-xl border border-white/15 bg-[#211309] px-4 py-2.5 text-[#ffe6cb] outline-none" />
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="mb-1 block text-xs uppercase tracking-widest text-[#e6c6a5]">Admin Discount (Tk)</label>
                     <input type="number" min="0" placeholder="0" value={form.adminDiscountAmount}
@@ -319,8 +319,8 @@ export default function AdminEnrollmentsPage() {
                 <button onClick={closeModal} className="text-3xl leading-none text-[#e6c6a5] transition-all hover:text-white">&times;</button>
               </div>
               <div className="space-y-6 text-[#ffe6cb]">
-                <div className="grid grid-cols-2 gap-6">
-                  <div><p className="text-xs uppercase tracking-widest text-[#e6c6a5]">Student</p><p className="font-semibold">{selectedEnrollment.student?.name || "Unknown"} (@{selectedEnrollment.student?.username || "\u2014"})</p></div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div><p className="text-xs uppercase tracking-widest text-[#e6c6a5]">Student</p><p className="font-semibold break-all">{selectedEnrollment.student?.name || "Unknown"} (@{selectedEnrollment.student?.username || "\u2014"})</p></div>
                   <div><p className="text-xs uppercase tracking-widest text-[#e6c6a5]">Course</p><p className="font-semibold">{selectedEnrollment.course?.title || "Unknown"}</p></div>
                 </div>
                 {(selectedEnrollment.paymentMethod || selectedEnrollment.trxId) && (
@@ -355,7 +355,7 @@ export default function AdminEnrollmentsPage() {
                 )}
                 <div className="rounded-2xl border border-white/10 bg-[#1a1008] p-5">
                   <h4 className="mb-4 text-lg font-semibold text-[#fff0df]">Edit Enrollment</h4>
-                  <div className="grid grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
                       <label className="mb-1 block text-xs uppercase tracking-widest text-[#e6c6a5]">Status</label>
                       <select value={editForm.status} onChange={(e) => setEditForm((prev) => ({ ...prev, status: e.target.value }))}

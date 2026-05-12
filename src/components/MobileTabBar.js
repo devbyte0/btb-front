@@ -7,6 +7,8 @@ import { useAuth } from "@/context/AuthContext";
 const guestTabs = [
   { href: "/", label: "Home", icon: "⌂" },
   { href: "/courses", label: "Courses", icon: "📚" },
+  { href: "/about-us", label: "About", icon: "ℹ" },
+  { href: "/contact-us", label: "Contact", icon: "✉" },
   { href: "/login", label: "Login", icon: "🔑" },
 ];
 

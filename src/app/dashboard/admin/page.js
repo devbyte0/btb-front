@@ -86,7 +86,7 @@ export default function AdminDashboardPage() {
         )}
 
         <Reveal variant="fade-up" delay={100}>
-          <section className="mb-6 grid gap-4 grid-cols-2 sm:grid-cols-4">
+          <section className="mb-6 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             {[
               { label: "Total Courses", value: courses.length },
               { label: "Students", value: stats.students },

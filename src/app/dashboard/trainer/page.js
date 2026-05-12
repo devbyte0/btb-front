@@ -208,7 +208,7 @@ export default function TrainerDashboardPage() {
           <Reveal variant="fade-up" delay={150} className="lg:col-span-3">
             <section className="section-card rounded-2xl p-6">
               <h2 className="text-2xl font-black text-[#fff0df]">Students</h2>
-              <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="mt-6 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
                 {students.map((student, i) => (
                   <Reveal key={student._id} delay={i * 40} variant="fade-up">
                     <article className="group rounded-2xl border border-white/10 bg-[#211309] p-5 transition-all duration-300 hover:-translate-y-1 hover:border-[#f39b45]/30 hover:shadow-xl">
@@ -228,40 +228,40 @@ export default function TrainerDashboardPage() {
           <Reveal variant="fade-up" delay={200} className="lg:col-span-3">
             <section className="section-card rounded-2xl p-6">
               <h2 className="text-2xl font-black text-[#fff0df]">Mark Batch Attendance</h2>
-              <div className="mt-6 grid gap-4 md:grid-cols-12">
-                <div className="md:col-span-4">
+              <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                <div>
                   <select value={selectedBatchId} onChange={(e) => setSelectedBatchId(e.target.value)}
                     className="w-full rounded-xl border border-white/15 bg-[#211309] px-4 py-3 text-[#ffe6cb] outline-none">
                     <option value="">Select Batch</option>
                     {batches.map((b) => (<option key={b._id} value={b._id}>{b.name} ({b.code})</option>))}
                   </select>
                 </div>
-                <div className="md:col-span-4">
+                <div>
                   <input type="date" value={sessionDate} onChange={(e) => setSessionDate(e.target.value)}
                     className="w-full rounded-xl border border-white/15 bg-[#211309] px-4 py-3 text-[#ffe6cb] outline-none" />
                 </div>
 
                 {selectedBatchId && batchStudents.length > 0 && (
-                  <div className="md:col-span-12 mt-6">
+                  <div className="sm:col-span-2 mt-6">
                     <div className="max-h-96 overflow-auto rounded-2xl border border-white/10 bg-[#211309]">
                       <table className="w-full">
                         <thead className="sticky top-0 bg-[#1a1008]">
-                          <tr><th className="px-6 py-4 text-left">Student</th><th className="px-6 py-4 text-center">Status</th><th className="px-6 py-4 text-left">Notes</th></tr>
+                          <tr><th className="px-3 py-3 text-left text-xs sm:px-6 sm:py-4 sm:text-sm">Student</th><th className="px-3 py-3 text-center text-xs sm:px-6 sm:py-4 sm:text-sm">Status</th><th className="px-3 py-3 text-left text-xs sm:px-6 sm:py-4 sm:text-sm">Notes</th></tr>
                         </thead>
                         <tbody>
                           {batchStudents.map((student) => {
                             const entry = attendanceData.find((a) => a.studentId === student._id);
                             return (
                               <tr key={student._id} className="border-t border-white/10 transition-all hover:bg-white/[0.02]">
-                                <td className="px-6 py-4 font-medium">{student.name} (@{student.username})</td>
-                                <td className="px-6 py-4 text-center">
+                                <td className="px-3 py-3 text-xs font-medium sm:px-6 sm:py-4 sm:text-sm">{student.name} (@{student.username})</td>
+                                <td className="px-3 py-3 text-center sm:px-6 sm:py-4">
                                   <select value={entry?.status || "present"}
                                     onChange={(e) => { setAttendanceData((prev) => prev.map((item) => item.studentId === student._id ? { ...item, status: e.target.value } : item)); }}
                                     className="rounded-xl border border-white/20 bg-[#211309] px-4 py-1 text-sm">
                                     <option value="present">Present</option><option value="absent">Absent</option><option value="late">Late</option>
                                   </select>
                                 </td>
-                                <td className="px-6 py-4">
+                                <td className="px-3 py-3 sm:px-6 sm:py-4">
                                   <input placeholder="Notes" value={entry?.notes || ""}
                                     onChange={(e) => { setAttendanceData((prev) => prev.map((item) => item.studentId === student._id ? { ...item, notes: e.target.value } : item)); }}
                                     className="w-full rounded-xl border border-white/20 bg-[#211309] px-3 py-2 text-sm" />
@@ -283,19 +283,19 @@ export default function TrainerDashboardPage() {
 
           <Reveal variant="fade-up" delay={250} className="lg:col-span-3">
             <section className="section-card rounded-2xl p-6">
-              <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <h2 className="text-2xl font-black text-[#fff0df]">Attendance Records</h2>
-                <div className="flex gap-4">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
                   <select value={batchFilter} onChange={(e) => setBatchFilter(e.target.value)}
-                    className="rounded-xl border border-white/15 bg-[#211309] px-4 py-2 text-[#ffe6cb]">
+                    className="rounded-xl border border-white/15 bg-[#211309] px-4 py-2 text-[#ffe6cb] text-sm">
                     <option value="">All Batches</option>
                     {batches.map((b) => (<option key={b._id} value={b._id}>{b.name} ({b.code})</option>))}
                   </select>
                   <input type="date" value={dateFilter} onChange={(e) => setDateFilter(e.target.value)}
-                    className="rounded-xl border border-white/15 bg-[#211309] px-4 py-2 text-[#ffe6cb]" />
+                    className="rounded-xl border border-white/15 bg-[#211309] px-4 py-2 text-[#ffe6cb] text-sm" />
                 </div>
               </div>
-              <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="mt-6 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                 {filteredAttendance.map((record, i) => (
                   <Reveal key={record._id} delay={i * 40} variant="fade-up">
                     <article className="rounded-2xl border border-white/10 bg-[#211309] p-5 transition-all duration-300 hover:-translate-y-1 hover:border-[#f39b45]/30">
@@ -321,11 +321,11 @@ export default function TrainerDashboardPage() {
               <h2 className="text-2xl font-black text-[#fff0df]">Available Courses</h2>
               {coursesError ? (<p className="mt-2 text-red-300">{coursesError}</p>
               ) : loadingCourses ? (
-                <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="mt-6 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
                   {[1,2,3,4].map((i) => (<div key={i} className="rounded-2xl border border-white/10 bg-[#211309] p-5"><div className="skeleton h-5 w-3/4" /><div className="skeleton mt-2 h-4 w-1/3" /></div>))}
                 </div>
               ) : (
-                <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="mt-6 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
                   {courses.map((course, i) => (
                     <Reveal key={course._id} delay={i * 40} variant="fade-up">
                       <article className="rounded-2xl border border-white/10 bg-[#211309] p-5 transition-all duration-300 hover:-translate-y-1 hover:border-[#f39b45]/30">
@@ -368,15 +368,15 @@ export default function TrainerDashboardPage() {
               <div className="mt-6 max-h-[500px] overflow-auto rounded-2xl border border-white/10 bg-[#1a1008]">
                 <table className="w-full">
                   <thead className="sticky top-0 bg-[#211309]">
-                    <tr><th className="px-6 py-4 text-left">Student</th><th className="px-6 py-4 text-center">Status</th><th className="px-6 py-4 text-left">Notes</th></tr>
+                    <tr><th className="px-3 py-3 text-xs text-left sm:px-6 sm:py-4 sm:text-sm">Student</th><th className="px-3 py-3 text-xs text-center sm:px-6 sm:py-4 sm:text-sm">Status</th><th className="px-3 py-3 text-xs text-left sm:px-6 sm:py-4 sm:text-sm">Notes</th></tr>
                   </thead>
                   <tbody>
                     {selectedAttendance.records.map((rec, index) => {
                       const entry = modalAttendanceData[index];
                       return (
                         <tr key={rec.student?._id} className="border-t border-white/10">
-                          <td className="px-6 py-4">{rec.student?.name} (@{rec.student?.username})</td>
-                          <td className="px-6 py-4 text-center">
+                          <td className="px-3 py-3 text-xs sm:px-6 sm:py-4 sm:text-sm">{rec.student?.name} (@{rec.student?.username})</td>
+                          <td className="px-3 py-3 text-center sm:px-6 sm:py-4">
                             <select value={entry.status} onChange={(e) => { const newData = [...modalAttendanceData]; newData[index].status = e.target.value; setModalAttendanceData(newData); }}
                               className="rounded-xl border border-white/20 bg-[#211309] px-4 py-1 text-sm">
                               <option value="present">Present</option><option value="absent">Absent</option><option value="late">Late</option>

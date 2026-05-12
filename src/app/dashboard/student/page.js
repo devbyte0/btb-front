@@ -454,11 +454,11 @@ export default function StudentDashboardPage() {
                         })}
                       </p>
                     </div>
-                    <div className="flex items-center gap-6">
-                      <span className={`rounded-full px-5 py-2 text-sm font-semibold ${record.studentRecord?.status === "present" ? "bg-green-400/20 text-green-400" : record.studentRecord?.status === "late" ? "bg-yellow-400/20 text-yellow-400" : "bg-red-400/20 text-red-400"}`}>
+                    <div className="flex items-center gap-3 sm:gap-6">
+                      <span className={`rounded-full px-3 py-1.5 text-xs font-semibold sm:px-5 sm:py-2 sm:text-sm ${record.studentRecord?.status === "present" ? "bg-green-400/20 text-green-400" : record.studentRecord?.status === "late" ? "bg-yellow-400/20 text-yellow-400" : "bg-red-400/20 text-red-400"}`}>
                         {record.studentRecord?.status?.toUpperCase() || "\u2014"}
                       </span>
-                      <p className="max-w-[180px] truncate text-xs text-[#e6c6a5]">
+                      <p className="hidden sm:block max-w-[180px] truncate text-xs text-[#e6c6a5]">
                         {record.studentRecord?.notes || "No notes"}
                       </p>
                     </div>

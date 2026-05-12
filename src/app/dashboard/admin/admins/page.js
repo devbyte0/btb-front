@@ -179,7 +179,7 @@ export default function AdminAdminsPage() {
                               <p className="text-sm text-[#e6c6a5]">BDT {course.basePrice}</p>
                             </div>
                           </div>
-                          <div className="mt-3 grid grid-cols-2 gap-2">
+                          <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
                             <button type="button" onClick={() => { setEditingCourseId(course._id); setCourseForm({ title: course.title || "", description: course.description || "", durationDays: course.durationDays || 30, basePrice: course.basePrice || 0, thumbnailUrl: course.thumbnailUrl || "" }); }}
                               className="rounded-lg border border-[#f6bf86] px-2 py-1.5 text-xs text-[#ffe4c4] transition-all hover:bg-[#f6bf86]/10">Edit</button>
                             <button type="button" onClick={() => handleDeleteCourse(course._id)}
@@ -217,7 +217,7 @@ export default function AdminAdminsPage() {
                       <>
                         <p className="font-semibold text-[#ffebd4] group-hover:text-[#f39b45] transition-colors">{promo.code}</p>
                         <p className="text-sm text-[#e6c6a5]">{promo.discountType} - {promo.discountValue}</p>
-                        <div className="mt-3 grid grid-cols-2 gap-2">
+                        <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
                           <button type="button" onClick={() => { setEditingPromoId(promo._id); setPromoForm({ code: promo.code || "", discountType: promo.discountType || "percent", discountValue: promo.discountValue || 0, usageLimit: promo.usageLimit || 100 }); }}
                             className="rounded-lg border border-[#f6bf86] px-2 py-1.5 text-xs text-[#ffe4c4] transition-all hover:bg-[#f6bf86]/10">Edit</button>
                           <button type="button" onClick={() => handleDeletePromo(promo._id)}

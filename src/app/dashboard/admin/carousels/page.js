@@ -77,7 +77,7 @@ export default function AdminCarouselsPage() {
                   <input value={form.imageUrl} onChange={(e) => setForm((p) => ({ ...p, imageUrl: e.target.value }))}
                     className="input-focus-ring w-full rounded-xl border border-white/15 bg-[#211309] px-4 py-3 text-[#ffe6cb]" required placeholder="https://images.unsplash.com/..." />
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="mb-1 block text-xs uppercase tracking-widest text-[#e6c6a5]">Title</label>
                     <input value={form.title} onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))}
@@ -94,7 +94,7 @@ export default function AdminCarouselsPage() {
                   <input value={form.subtitle} onChange={(e) => setForm((p) => ({ ...p, subtitle: e.target.value }))}
                     className="input-focus-ring w-full rounded-xl border border-white/15 bg-[#211309] px-4 py-3 text-[#ffe6cb]" />
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="mb-1 block text-xs uppercase tracking-widest text-[#e6c6a5]">Link URL</label>
                     <input value={form.linkUrl} onChange={(e) => setForm((p) => ({ ...p, linkUrl: e.target.value }))}
