@@ -43,7 +43,8 @@ export default function SiteHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#160d08]/80 backdrop-blur-xl">
+    <>
+    <header className="sticky top-0 z-[55] border-b border-white/[0.06] bg-[#160d08]/80 backdrop-blur-xl">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-3 md:px-8 md:py-4">
         <Link href="/" className="flex items-center gap-3 text-[#ffd4a5] transition-all hover:opacity-80">
           <Image src="/btb-logo.png" alt="Barista Training Bangladesh logo" width={52} height={52}
@@ -84,7 +85,7 @@ export default function SiteHeader() {
               {notifOpen && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setNotifOpen(false)} />
-                  <div className="absolute right-0 top-full z-50 mt-2 w-80 rounded-2xl border border-white/10 bg-[#1a1009]/95 p-3 shadow-2xl backdrop-blur-xl">
+                  <div className="fixed right-2 top-14 z-[75] w-72 rounded-2xl border border-white/10 bg-[#1a1009]/95 p-3 shadow-2xl backdrop-blur-xl md:absolute md:right-0 md:top-full md:mt-2 md:w-80 md:z-50">
                     <div className="mb-2 flex items-center justify-between border-b border-white/10 pb-2">
                       <p className="text-xs font-semibold text-[#ffe7ce]">Notifications</p>
                       {unreadCount > 0 && (
@@ -158,11 +159,16 @@ export default function SiteHeader() {
           </div>
         </div>
       </div>
+    </header>
 
       {mobileOpen && (
         <>
-          <div className="fixed inset-0 z-40 bg-black/60 md:hidden" onClick={() => setMobileOpen(false)} />
-          <nav className="mobile-menu-enter fixed right-0 top-0 z-50 flex h-full w-72 flex-col gap-1 border-l border-white/10 bg-[#1a1009]/95 p-6 pt-20 backdrop-blur-xl md:hidden">
+          <div className="fixed inset-0 z-[60] bg-black/60 md:hidden" onClick={() => setMobileOpen(false)} />
+          <nav className="mobile-menu-enter fixed right-0 top-0 z-[70] flex h-full w-72 flex-col gap-1 border-l border-white/10 bg-[#1a1009]/95 p-6 pt-6 backdrop-blur-xl md:hidden shadow-2xl">
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-sm font-semibold text-[#ffe7ce]">Menu</span>
+              <button onClick={() => setMobileOpen(false)} className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-lg text-[#ffe7ce] hover:bg-white/20">&times;</button>
+            </div>
             {navLinks.map((link) => (
               <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)}
                 className="rounded-xl px-4 py-3 text-[#ffe7ce] transition-all hover:bg-[#f0963a]/15 hover:text-[#f0963a]">
@@ -170,20 +176,21 @@ export default function SiteHeader() {
               </Link>
             ))}
             {user ? (
-              <Link href="/dashboard/profile" onClick={() => setMobileOpen(false)}
-                className="rounded-xl px-4 py-3 text-[#ffe7ce] transition-all hover:bg-[#f0963a]/15 hover:text-[#f0963a]">
-                Profile
-              </Link>
-            ) : null}
-            {user ? (
-              <button type="button" onClick={() => { logout(); setMobileOpen(false); }}
-                className="mt-4 rounded-xl border border-red-400/30 px-4 py-3 text-left text-red-300 transition-all hover:bg-red-400/10">
-                Logout
-              </button>
+              <>
+                <div className="my-2 border-t border-white/10" />
+                <Link href="/dashboard/profile" onClick={() => setMobileOpen(false)}
+                  className="rounded-xl px-4 py-3 text-[#ffe7ce] transition-all hover:bg-[#f0963a]/15 hover:text-[#f0963a]">
+                  Profile
+                </Link>
+                <button type="button" onClick={() => { logout(); setMobileOpen(false); }}
+                  className="rounded-xl border border-red-400/30 px-4 py-3 text-left text-red-300 transition-all hover:bg-red-400/10">
+                  Logout
+                </button>
+              </>
             ) : null}
           </nav>
         </>
       )}
-    </header>
+    </>
   );
 }
