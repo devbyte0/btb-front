@@ -6,6 +6,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import AdminSectionNav from "@/components/AdminSectionNav";
 import { useAuth } from "@/context/AuthContext";
 import { batchApi, dashboardApi } from "@/lib/api";
+import TableWrapper from "@/components/TableWrapper";
 import Reveal from "@/components/Reveal";
 
 const unwrap = (res) => res?.data || res || [];
@@ -28,6 +29,9 @@ export default function BatchDetailsPage() {
   const [scheduleForm, setScheduleForm] = useState({ day: "Saturday", startTime: "10:00", endTime: "12:00", topic: "", room: "" });
   const [editingScheduleId, setEditingScheduleId] = useState("");
 
+  // Attendance data for printing
+  const [attendanceRecords, setAttendanceRecords] = useState([]);
+
   // Transfer modal
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [studentToTransfer, setStudentToTransfer] = useState(null);
@@ -45,6 +49,10 @@ export default function BatchDetailsPage() {
       setName(data?.name || "");
       setCode(data?.code || "");
       setBatches(unwrap(allBatchesRes).filter((b) => b._id !== batchId));
+      // Fetch attendance for this batch
+      dashboardApi.listAttendance(token).then((res) => {
+        setAttendanceRecords((res?.data || []).filter((r) => r.batch?._id === batchId));
+      }).catch(() => {});
     } catch (err) { setError(err.message); }
     finally { setLoading(false); }
   }, [token, batchId]);
@@ -103,42 +111,60 @@ export default function BatchDetailsPage() {
     catch (err) { setError(err.message); }
   };
 
+  const printStyle = `
+    @page { margin: 10mm; }
+    body { font-family: system-ui, sans-serif; padding: 20px; color: #222; }
+    .header { text-align: center; margin-bottom: 30px; border-bottom: 3px double #222; padding-bottom: 20px; }
+    .header img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; }
+    .header h1 { margin: 0; font-size: 24px; }
+    .header p { margin: 3px 0; color: #555; font-size: 13px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid #ddd; font-size: 12px; }
+    th { background: #f5f0eb; font-weight: 600; }
+    .section { margin-top: 25px; }
+    .section h3 { font-size: 16px; margin: 0 0 10px; border-bottom: 2px solid #d4803c; padding-bottom: 5px; }
+    .trainer-box { display: flex; flex-wrap: wrap; gap: 15px; }
+    .trainer-box div { background: #faf8f5; padding: 10px 15px; border-radius: 6px; flex: 1; min-width: 200px; }
+    .trainer-box div p { margin: 2px 0; font-size: 13px; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+    .present { background: #dcfce7; color: #15803d; }
+    .absent { background: #fef2f2; color: #dc2626; }
+    .late { background: #fef3c7; color: #b45309; }
+    .footer { margin-top: 40px; text-align: center; font-size: 11px; color: #999; border-top: 1px solid #eee; padding-top: 15px; }
+  `;
+
   const handlePrintStudentList = () => {
     if (!batch) return;
     const w = window.open("", "_blank");
     if (!w) return;
-    w.document.write(`
-      <!DOCTYPE html><html><head><title>Student List - ${batch.name}</title>
-      <style>
-        @page { margin: 10mm; }
-        body { font-family: system-ui, sans-serif; padding: 20px; color: #222; }
-        .header { text-align: center; margin-bottom: 30px; }
-        .header h1 { margin: 0; font-size: 24px; }
-        .header p { margin: 5px 0; color: #666; font-size: 14px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #ddd; font-size: 13px; }
-        th { background: #f5f0eb; font-weight: 600; }
-        .trainer-info { margin-top: 30px; padding: 15px; background: #faf8f5; border-radius: 8px; font-size: 13px; }
-        .trainer-info h3 { margin: 0 0 10px; font-size: 16px; }
-        .footer { margin-top: 40px; text-align: center; font-size: 12px; color: #999; }
-        .schedule { margin-top: 30px; }
-        .schedule h3 { font-size: 16px; }
-        .schedule table { margin-top: 10px; }
-      </style></head><body>
-        <div class="header">
-          <h1>${batch.name} (${batch.code})</h1>
-          <p>Barista Training Bangladesh</p>
-          <p>1/1, 1/2, Road-2, Block-G, Shah Ali, Mirpur-1, Dhaka</p>
-        </div>
-        ${batch.trainers?.length ? `<div class="trainer-info"><h3>Trainers</h3>${batch.trainers.map((t) => `<p><strong>${t.name}</strong> (@${t.username})</p>`).join("")}</div>` : ""}
-        ${batch.schedule?.length ? `<div class="schedule"><h3>Class Schedule</h3><table><tr><th>Day</th><th>Time</th><th>Topic</th><th>Room</th></tr>${batch.schedule.map((s) => `<tr><td>${s.day}</td><td>${s.startTime} - ${s.endTime}</td><td>${s.topic || "-"}</td><td>${s.room || "-"}</td></tr>`).join("")}</table></div>` : ""}
-        <h3>Student List (${batch.students?.length || 0})</h3>
-        <table><tr><th>#</th><th>Name</th><th>Username</th><th>Email</th><th>Phone</th></tr>
-        ${(batch.students || []).map((s, i) => `<tr><td>${i + 1}</td><td>${s.name}</td><td>@${s.username}</td><td>${s.email || "-"}</td><td>${s.phone || "-"}</td></tr>`).join("")}
-        </table>
-        <div class="footer"><p>Generated on ${new Date().toLocaleDateString("en-BD")} - Barista Training Bangladesh</p></div>
-      </body></html>
-    `);
+    w.document.write(`<!DOCTYPE html><html><head><title>Student List - ${batch.name}</title><style>${printStyle}</style></head><body>
+      <div class="header"><img src="/btb-logo.png" alt="BTB Logo" /><h1>${batch.name} (${batch.code})</h1><p>Barista Training Bangladesh</p><p>1/1, 1/2, Road-2, Block-G, Shah Ali, Mirpur-1, Dhaka</p></div>
+      ${batch.trainers?.length ? `<div class="section"><h3>Trainers</h3><div class="trainer-box">${batch.trainers.map((t) => `<div><p><strong>${t.name}</strong></p><p>@${t.username}</p>${t.email ? `<p>${t.email}</p>` : ""}${t.phone ? `<p>${t.phone}</p>` : ""}</div>`).join("")}</div></div>` : ""}
+      ${batch.schedule?.length ? `<div class="section"><h3>Class Schedule</h3><table><tr><th>Day</th><th>Time</th><th>Topic</th><th>Room</th></tr>${batch.schedule.map((s) => `<tr><td>${s.day}</td><td>${s.startTime}-${s.endTime}</td><td>${s.topic || "-"}</td><td>${s.room || "-"}</td></tr>`).join("")}</table></div>` : ""}
+      <div class="section"><h3>Students (${batch.students?.length || 0})</h3>
+      <table><tr><th>#</th><th>Name</th><th>Username</th><th>Email</th><th>Phone</th></tr>
+      ${(batch.students || []).map((s, i) => `<tr><td>${i+1}</td><td>${s.name}</td><td>@${s.username}</td><td>${s.email || "-"}</td><td>${s.phone || "-"}</td></tr>`).join("")}
+      </table></div>
+      <div class="footer">Generated on ${new Date().toLocaleDateString("en-BD")} - Barista Training Bangladesh</div>
+    </body></html>`);
+    w.document.close(); w.focus(); setTimeout(() => w.print(), 500);
+  };
+
+  const handlePrintAttendance = () => {
+    if (!batch || !attendanceRecords.length) { setError("No attendance records for this batch."); return; }
+    const w = window.open("", "_blank");
+    if (!w) return;
+    w.document.write(`<!DOCTYPE html><html><head><title>Attendance - ${batch.name}</title><style>${printStyle}</style></head><body>
+      <div class="header"><img src="/btb-logo.png" alt="BTB Logo" /><h1>Attendance Records</h1><p>${batch.name} (${batch.code})</p><p>Barista Training Bangladesh</p></div>
+      ${attendanceRecords.map((rec) => `
+        <div class="section">
+          <h3>${new Date(rec.sessionDate).toLocaleDateString("en-BD", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}</h3>
+          <table><tr><th>#</th><th>Student</th><th>Status</th><th>Notes</th></tr>
+          ${(rec.records || []).map((r, i) => `<tr><td>${i+1}</td><td>${r.student?.name || "Unknown"}</td><td><span class="badge ${r.status}">${r.status.toUpperCase()}</span></td><td>${r.notes || "-"}</td></tr>`).join("")}
+          </table>
+        </div>`).join("")}
+      <div class="footer">Generated on ${new Date().toLocaleDateString("en-BD")} - Barista Training Bangladesh</div>
+    </body></html>`);
     w.document.close(); w.focus(); setTimeout(() => w.print(), 500);
   };
 
@@ -154,7 +180,10 @@ export default function BatchDetailsPage() {
             <h1 className="text-3xl font-black text-[#fff0df]">{batch?.name} ({batch?.code})</h1>
             <p className="mt-1 text-[#e6c6a5]">Manage batch details, schedule, and students.</p>
           </div>
-          <button onClick={handlePrintStudentList} className="btn-primary rounded-xl px-5 py-2.5 text-sm font-semibold text-white">Print Student List</button>
+          <div className="flex gap-2">
+            <button onClick={handlePrintStudentList} className="btn-primary rounded-xl px-4 py-2.5 text-sm font-semibold text-white whitespace-nowrap">Print Students</button>
+            <button onClick={handlePrintAttendance} className="rounded-xl border border-[#f6bf86] px-4 py-2.5 text-sm font-semibold text-[#ffe4c4] whitespace-nowrap hover:bg-[#f6bf86]/10">Print Attendance</button>
+          </div>
         </div>
         <Reveal variant="fade-up" delay={30}><AdminSectionNav /></Reveal>
 
