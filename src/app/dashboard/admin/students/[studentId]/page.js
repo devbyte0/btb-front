@@ -51,7 +51,12 @@ export default function StudentViewPage() {
         .info-grid div{padding:8px 12px;background:#faf8f5;border-radius:6px;font-size:13px}
         .info-grid div strong{display:block;color:#666;font-size:11px;text-transform:uppercase}
       </style></head><body>
-      <div class="header"><img src="/btb-logo.png" alt="BTB"/><h1>${student.name}</h1><p>@${student.username} ${student.email ? `- ${student.email}` : ""}${student.phone ? `- ${student.phone}` : ""}</p></div>
+      <div class="header">
+        <img src="/btb-logo.png" alt="BTB"/>
+        ${student.profilePic ? `<img src="${student.profilePic}" alt="Photo" style="width:80px;height:80px;border-radius:50%;object-fit:cover;margin:10px auto;display:block;border:3px solid #d4803c;" />` : ""}
+        <h1>${student.name}</h1>
+        <p>@${student.username} ${student.email ? `- ${student.email}` : ""}${student.phone ? `- ${student.phone}` : ""}</p>
+      </div>
       <div class="section"><h3>Student Info</h3>
         <div class="info-grid">
           <div><strong>User ID</strong>${student._id}</div>
@@ -78,9 +83,18 @@ export default function StudentViewPage() {
     <ProtectedRoute roles={["trainer", "admin", "super_admin"]}>
       <div className="page-enter mx-auto w-full max-w-7xl px-4 py-6 md:px-8 md:py-10">
         <div className="flex items-center justify-between flex-wrap gap-3">
-          <div>
-            <h1 className="text-3xl font-black text-[#fff0df]">{student?.name}</h1>
-            <p className="mt-1 text-[#e6c6a5]">@{student?.username} — Student Profile</p>
+          <div className="flex items-center gap-4">
+            <div className="h-16 w-16 shrink-0 overflow-hidden rounded-full border-2 border-[#d4803c]/30 bg-[#1a1008]">
+              {student?.profilePic ? (
+                <img src={student.profilePic} alt="" className="h-full w-full object-cover" />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center text-xl font-bold text-[#e6c6a5]">{student?.name?.[0]?.toUpperCase() || "?"}</div>
+              )}
+            </div>
+            <div>
+              <h1 className="text-3xl font-black text-[#fff0df]">{student?.name}</h1>
+              <p className="mt-1 text-[#e6c6a5]">@{student?.username} — Student Profile</p>
+            </div>
           </div>
           <button onClick={handlePrint} className="btn-primary rounded-xl px-5 py-2.5 text-sm font-semibold text-white whitespace-nowrap">Print Profile</button>
         </div>
