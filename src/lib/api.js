@@ -136,6 +136,8 @@ export const dashboardApi = {
       },
       token
     ),
+  sendReceipt: (token, enrollmentId, payload) =>
+    apiRequest(`/enrollments/${enrollmentId}/send-receipt`, { method: "POST", body: JSON.stringify(payload || {}) }, token),
   deleteEnrollment: (token, enrollmentId) =>
     apiRequest(
       `/enrollments/${enrollmentId}`,

@@ -25,6 +25,8 @@ export default function AdminEnrollmentsPage() {
   const [selectedEnrollment, setSelectedEnrollment] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editForm, setEditForm] = useState({ status: "", paidAmount: "" });
+  const [receiptPassword, setReceiptPassword] = useState("");
+  const [sendingReceipt, setSendingReceipt] = useState(false);
 
   const loadEnrollmentData = useCallback(async () => {
     setLoading(true); setError("");
@@ -90,7 +92,18 @@ export default function AdminEnrollmentsPage() {
     setIsModalOpen(true);
   };
 
-  const closeModal = () => { setIsModalOpen(false); setSelectedEnrollment(null); };
+  const closeModal = () => { setIsModalOpen(false); setSelectedEnrollment(null); setReceiptPassword(""); };
+
+  const handleSendReceipt = async () => {
+    if (!selectedEnrollment) return;
+    setError(""); setMessage(""); setSendingReceipt(true);
+    try {
+      const res = await dashboardApi.sendReceipt(token, selectedEnrollment._id, { plainPassword: receiptPassword || undefined });
+      setMessage(res?.message || "Receipt email sent!");
+      setReceiptPassword("");
+    } catch (err) { setError(err.message); }
+    finally { setSendingReceipt(false); }
+  };
 
   const handleMarkFullyPaid = async () => {
     if (!selectedEnrollment?.pricing?.finalPrice) return;
@@ -373,7 +386,18 @@ export default function AdminEnrollmentsPage() {
               </div>
               <div className="mt-8 flex flex-wrap gap-3">
                 <button onClick={handleSaveEdit} className="btn-primary flex-1 rounded-2xl px-6 py-3 text-sm font-semibold text-white">Save Changes</button>
-                <button onClick={handlePrintReceipt} className="flex-1 rounded-2xl bg-white/10 px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-white/20">Print Official Receipt</button>
+                <button onClick={handlePrintReceipt} className="flex-1 rounded-2xl bg-white/10 px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-white/20">Print Receipt</button>
+                <div className="w-full flex gap-2 items-end">
+                  <div className="flex-1">
+                    <label className="mb-1 block text-[10px] uppercase tracking-widest text-[#e6c6a5]">Password (for new accounts)</label>
+                    <input type="text" value={receiptPassword} onChange={(e) => setReceiptPassword(e.target.value)}
+                      className="w-full rounded-xl border border-white/15 bg-[#211309] px-3 py-2.5 text-xs text-[#ffe6cb] outline-none" placeholder="Leave blank if existing" />
+                  </div>
+                  <button onClick={handleSendReceipt} disabled={sendingReceipt}
+                    className="rounded-2xl bg-sky-600 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-sky-500 disabled:opacity-60 whitespace-nowrap">
+                    {sendingReceipt ? "Sending..." : "Send Email Receipt"}
+                  </button>
+                </div>
                 {selectedEnrollment.status !== "completed" && (
                   <button onClick={handleMarkFullyPaid} className="flex-1 rounded-2xl bg-green-600 px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-green-500">Mark as Fully Paid (Tk{selectedEnrollment.pricing?.finalPrice || 0})</button>
                 )}
