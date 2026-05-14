@@ -129,14 +129,6 @@ export default function StudentDashboardPage() {
 
       const enrollment = unwrap(enrollmentRes);
 
-      await dashboardApi.createPayment(token, {
-        enrollmentId: enrollment._id,
-        amount: paymentForm.amount,
-        method: paymentForm.method,
-        reference: paymentForm.reference,
-        note: `Initial payment - Phone: ${paymentForm.phone}`,
-      });
-
       setMessage("Enrollment successful! Payment recorded.");
       closePaymentModal();
       await loadStudentData();

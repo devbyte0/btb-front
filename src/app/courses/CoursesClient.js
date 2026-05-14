@@ -83,15 +83,6 @@ export default function CoursesClient() {
       });
       const enrollment = unwrap(enrollmentRes);
 
-      // Step 3: Record payment
-      await dashboardApi.createPayment(activeToken, {
-        enrollmentId: enrollment._id,
-        amount: paymentForm.amount,
-        method: paymentForm.method,
-        reference: paymentForm.reference,
-        note: `Initial payment - Phone: ${paymentForm.phone}`,
-      });
-
       setMessage(isRegistering ? "Registered & enrolled successfully!" : "Enrollment successful! Payment recorded.");
       setTimeout(() => { closeModal(); if (isRegistering) router.push("/dashboard/student"); }, 1500);
     } catch (err) { setError(err.message); }
