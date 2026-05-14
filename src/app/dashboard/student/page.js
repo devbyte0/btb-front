@@ -332,11 +332,9 @@ export default function StudentDashboardPage() {
                           </span>
                         </div>
 
-                        {batchInfo && (
-                          <div className="mt-3 text-xs text-[#e6c6a5]">
-                            <p><span className="font-medium text-[#ffc489]">Batch:</span> {batchInfo.name} ({batchInfo.code})</p>
-                          </div>
-                        )}
+                        <div className="mt-3 text-xs text-[#e6c6a5]">
+                          <p><span className="font-medium text-[#ffc489]">Batch:</span> {batchInfo ? `${batchInfo.name} (${batchInfo.code})` : "Not yet assigned"}</p>
+                        </div>
 
                         <div className="mt-4 rounded-xl bg-[#1a1008] p-3 text-xs text-[#e6c6a5]">
                           <p><span className="font-medium text-[#ffc489]">Location:</span> 1/1, 1/2, Road-2, Block-G, Shah Ali, Mirpur-1</p>
