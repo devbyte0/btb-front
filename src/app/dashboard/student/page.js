@@ -334,6 +334,13 @@ export default function StudentDashboardPage() {
 
                         <div className="mt-3 text-xs text-[#e6c6a5]">
                           <p><span className="font-medium text-[#ffc489]">Batch:</span> {batchInfo ? `${batchInfo.name} (${batchInfo.code})` : "Not yet assigned"}</p>
+                          {batchInfo?.schedule?.length > 0 && (
+                            <div className="mt-2 space-y-1">
+                              {batchInfo.schedule.map((s, i) => (
+                                <p key={i} className="text-[10px] text-[#a09080]">{s.day} {s.startTime}-{s.endTime}{s.topic ? ` - ${s.topic}` : ""}{s.room ? ` (${s.room})` : ""}</p>
+                              ))}
+                            </div>
+                          )}
                         </div>
 
                         <div className="mt-4 rounded-xl bg-[#1a1008] p-3 text-xs text-[#e6c6a5]">

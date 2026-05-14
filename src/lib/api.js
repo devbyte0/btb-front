@@ -329,6 +329,13 @@ export const userApi = {
 
 export const batchApi = {
   list: (token) => apiRequest("/batches", {}, token),
+  get: (token, id) => apiRequest(`/batches/${id}`, {}, token),
+  addSchedule: (token, batchId, payload) =>
+    apiRequest(`/batches/${batchId}/schedule`, { method: "POST", body: JSON.stringify(payload) }, token),
+  updateSchedule: (token, batchId, scheduleId, payload) =>
+    apiRequest(`/batches/${batchId}/schedule/${scheduleId}`, { method: "PATCH", body: JSON.stringify(payload) }, token),
+  removeSchedule: (token, batchId, scheduleId) =>
+    apiRequest(`/batches/${batchId}/schedule/${scheduleId}`, { method: "DELETE" }, token),
 };
 
 export const popupApi = {
