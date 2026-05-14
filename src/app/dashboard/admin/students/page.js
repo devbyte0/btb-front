@@ -144,8 +144,14 @@ export default function AdminStudentsPage() {
               <Reveal key={student._id} delay={i * 20} variant="fade-up">
                 <div className="section-card rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#d4803c]/10 text-sm font-bold text-[#d4803c]">
-                      {student.name?.[0]?.toUpperCase() || "?"}
+                    <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full bg-[#d4803c]/10">
+                      {student.profilePic ? (
+                        <img src={student.profilePic} alt="" className="h-full w-full object-cover" />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center text-sm font-bold text-[#d4803c]">
+                          {student.name?.[0]?.toUpperCase() || "?"}
+                        </div>
+                      )}
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="font-semibold text-[#ffebd4] truncate">{student.name}</p>
