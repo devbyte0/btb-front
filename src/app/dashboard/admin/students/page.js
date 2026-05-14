@@ -20,6 +20,7 @@ export default function AdminStudentsPage() {
 
   const [editStudent, setEditStudent] = useState(null);
   const [editForm, setEditForm] = useState({ name: "", email: "", phone: "" });
+  const [uploadingPic, setUploadingPic] = useState(false);
   const [emailStudent, setEmailStudent] = useState(null);
   const [emailForm, setEmailForm] = useState({ subject: "", message: "" });
 
@@ -40,6 +41,26 @@ export default function AdminStudentsPage() {
   };
 
   const closeEdit = () => { setEditStudent(null); };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file || !editStudent) return;
+    setUploadingPic(true); setError("");
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch(`${API_BASE}/uploads`, {
+        method: "POST", headers: { Authorization: `Bearer ${token}` }, body: formData,
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Upload failed");
+      const url = data.data?.url || data.url;
+      await dashboardApi.updateUser(token, editStudent._id, { profilePic: url });
+      setMessage("Profile picture updated!");
+      await load();
+    } catch (err) { setError(err.message); }
+    finally { setUploadingPic(false); }
+  };
 
   const handleSave = async (e) => {
     e.preventDefault();
@@ -141,7 +162,9 @@ export default function AdminStudentsPage() {
                     <span>Active: {student.isActive ? "Yes" : "No"}</span>
                     <span>{new Date(student.createdAt).toLocaleDateString("en-BD")}</span>
                   </div>
-                  <div className="mt-4 flex gap-2">
+                  <div className="mt-4 flex gap-2 flex-wrap">
+                    <a href={`/dashboard/admin/students/${student._id}`}
+                      className="flex-1 rounded-xl border border-emerald-500/40 py-2.5 text-xs font-semibold text-emerald-300 text-center transition-all hover:bg-emerald-500/10">View</a>
                     <button onClick={() => openEdit(student)}
                       className="flex-1 rounded-xl border border-[#f6bf86] py-2.5 text-xs font-semibold text-[#ffe4c4] transition-all hover:bg-[#f6bf86]/10">Edit</button>
                     {student.email && (
@@ -162,7 +185,20 @@ export default function AdminStudentsPage() {
             <div className="modal-content w-full max-w-md rounded-3xl bg-[#211309] p-6 shadow-2xl overflow-y-auto max-h-[90vh]">
               <h3 className="text-xl font-black text-[#fff0df]">Edit Student</h3>
               <p className="text-sm text-[#e6c6a5] mt-1">@{editStudent.username}</p>
-              <form onSubmit={handleSave} className="mt-6 space-y-4">
+              <div className="mt-4 flex items-center gap-4">
+                <div className="h-14 w-14 shrink-0 overflow-hidden rounded-full bg-[#1a1008] border border-white/10">
+                  {editStudent.profilePic ? (
+                    <img src={editStudent.profilePic} alt="" className="h-full w-full object-cover" />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center text-lg text-[#e6c6a5]">{editStudent.name?.[0]?.toUpperCase() || "?"}</div>
+                  )}
+                </div>
+                <label className="cursor-pointer rounded-lg border border-[#f6bf86] px-3 py-1.5 text-xs text-[#ffe4c4] hover:bg-[#f6bf86]/10">
+                  {uploadingPic ? "Uploading..." : "Upload Photo"}
+                  <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" disabled={uploadingPic} />
+                </label>
+              </div>
+              <form onSubmit={handleSave} className="mt-4 space-y-4">
                 <div>
                   <label className="mb-1 block text-xs uppercase tracking-widest text-[#e6c6a5]">Name</label>
                   <input value={editForm.name} onChange={(e) => setEditForm((p) => ({ ...p, name: e.target.value }))}

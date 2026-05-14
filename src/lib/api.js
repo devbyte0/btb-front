@@ -248,6 +248,8 @@ export const dashboardApi = {
     apiRequest(`/users/${userId}`, { method: "DELETE" }, token),
   deleteStudentFull: (token, studentId) =>
     apiRequest(`/users/students/${studentId}`, { method: "DELETE" }, token),
+  getStudentFullData: (token, studentId) =>
+    apiRequest(`/users/students/${studentId}/full-data`, {}, token),
 };
 
 export const aboutUsApi = {
