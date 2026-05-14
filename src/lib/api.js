@@ -330,6 +330,7 @@ export const userApi = {
 export const batchApi = {
   list: (token) => apiRequest("/batches", {}, token),
   get: (token, id) => apiRequest(`/batches/${id}`, {}, token),
+  myBatch: (token) => apiRequest("/batches/my-batch", {}, token),
   addSchedule: (token, batchId, payload) =>
     apiRequest(`/batches/${batchId}/schedule`, { method: "POST", body: JSON.stringify(payload) }, token),
   updateSchedule: (token, batchId, scheduleId, payload) =>

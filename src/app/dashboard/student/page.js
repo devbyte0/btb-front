@@ -36,14 +36,13 @@ export default function StudentDashboardPage() {
   const loadStudentData = useCallback(async () => {
     setLoading(true);
     try {
-      const [enrollmentsRes, attendanceRes, batchesRes] = await Promise.all([
+      const [enrollmentsRes, attendanceRes, myBatchRes] = await Promise.all([
         dashboardApi.listEnrollments(token),
         dashboardApi.listAttendance(token),
-        batchApi.list(token).catch(() => ({ data: [] })),
+        batchApi.myBatch(token).catch(() => ({ data: null })),
       ]);
-      setStudentBatches((batchesRes?.data || []).filter((b) =>
-        b.students?.some((s) => (s._id || s) === (user?._id || user?.id))
-      ));
+      const myBatchData = myBatchRes?.data || myBatchRes || null;
+      setStudentBatches(myBatchData ? [myBatchData] : []);
 
       const allEnrollments = unwrap(enrollmentsRes);
       const allAttendance = unwrap(attendanceRes);
@@ -309,14 +308,7 @@ export default function StudentDashboardPage() {
 
                   const classesLeft = Math.max(0, totalClasses - attended);
 
-                  const batchInfo =
-                    attendance.find((r) =>
-                      r.course?._id === en.course?._id ||
-                      (r.batch?.courses && r.batch.courses.some((c) => c._id === en.course?._id))
-                    )?.batch ||
-                    studentBatches.find((b) =>
-                      b.courses?.some((c) => c._id === en.course?._id) || b.course?._id === en.course?._id
-                    );
+                  const batchInfo = studentBatches.length > 0 ? studentBatches[0] : null;
 
                   const paid = en.paymentSummary?.paidAmount || 0;
                   const due = en.paymentSummary?.dueAmount || 0;
