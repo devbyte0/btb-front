@@ -23,7 +23,7 @@ export default function CoursesClient() {
   const [isRegistering, setIsRegistering] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [registerForm, setRegisterForm] = useState({ name: "", username: "", password: "", email: "", phone: "" });
-  const [paymentForm, setPaymentForm] = useState({ amount: 500, method: "bkash", reference: "", phone: "" });
+  const [paymentForm, setPaymentForm] = useState({ amount: 500, method: "bkash", reference: "", phone: "", promoCode: "" });
 
   const [copied, setCopied] = useState(false);
   const BKASH_NUMBER = "01911-769822";
@@ -38,10 +38,10 @@ export default function CoursesClient() {
     if (!isAuthenticated || user?.role !== "student") {
       setIsRegistering(true);
       setRegisterForm({ name: "", username: "", password: "", email: "", phone: "" });
-      setPaymentForm({ amount: 500, method: "bkash", reference: "", phone: "" });
+      setPaymentForm({ amount: 500, method: "bkash", reference: "", phone: "", promoCode: "" });
     } else {
       setIsRegistering(false);
-      setPaymentForm({ amount: 500, method: "bkash", reference: "", phone: user?.phone || "" });
+      setPaymentForm({ amount: 500, method: "bkash", reference: "", phone: user?.phone || "", promoCode: "" });
     }
     setIsModalOpen(true);
   };
@@ -78,6 +78,8 @@ export default function CoursesClient() {
         method: paymentForm.method,
         reference: paymentForm.reference,
         phone: paymentForm.phone,
+        promoCode: paymentForm.promoCode || undefined,
+        plainPassword: isRegistering ? registerForm.password : undefined,
       });
       const enrollment = unwrap(enrollmentRes);
 
@@ -195,6 +197,13 @@ export default function CoursesClient() {
                 </div>
 
                 <div>
+                  <label className="block text-[10px] uppercase tracking-widest text-[#6b6b6b]">Promo Code</label>
+                  <input type="text" value={paymentForm.promoCode} onChange={(e) => setPaymentForm({ ...paymentForm, promoCode: e.target.value })}
+                    className="mt-0.5 w-full rounded-xl border border-[#1c1c1e]/15 bg-white px-3 py-2.5 text-sm text-[#1c1c1e] outline-none focus:border-[#d4803c] focus:ring-2 focus:ring-[#d4803c]/15"
+                    placeholder="e.g. STUDENT10" />
+                </div>
+
+                <div>
                   <label className="block text-[10px] uppercase tracking-widest text-[#6b6b6b]">Transaction ID</label>
                   <input type="text" value={paymentForm.reference} onChange={(e) => setPaymentForm({ ...paymentForm, reference: e.target.value })}
                     className="mt-0.5 w-full rounded-xl border border-[#1c1c1e]/15 bg-white px-3 py-2.5 text-sm text-[#1c1c1e] outline-none focus:border-[#d4803c] focus:ring-2 focus:ring-[#d4803c]/15"
@@ -213,7 +222,7 @@ export default function CoursesClient() {
                     className="flex-1 rounded-xl border border-[#1c1c1e]/20 py-2.5 text-sm text-[#6b6b6b] transition-all hover:bg-[#faf8f5]">Cancel</button>
                   <button type="submit" disabled={submitting}
                     className="btn-primary flex-1 rounded-xl py-2.5 text-sm font-semibold text-white disabled:opacity-60">
-                    {submitting ? "Processing..." : "Pay 500 Tk & Enroll"}
+                    {submitting ? "Processing..." : `Pay ${paymentForm.amount} Tk & Enroll`}
                   </button>
                 </div>
               </form>

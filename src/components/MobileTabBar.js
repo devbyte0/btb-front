@@ -26,7 +26,7 @@ const adminTabs = [
   { href: "/dashboard/admin/announcements", label: "News", icon: "📰" },
   { href: "/dashboard/admin/enrollments", label: "Enroll", icon: "📝" },
   { href: "/dashboard/admin/batches", label: "Batches", icon: "📦" },
-  { href: "/dashboard/admin/contact-inquiries", label: "Inbox", icon: "✉" },
+  { href: "/dashboard/admin/email-test", label: "Email", icon: "✉" },
 ];
 
 export default function MobileTabBar() {

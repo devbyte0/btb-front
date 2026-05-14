@@ -306,6 +306,8 @@ export const notificationApi = {
     apiRequest("/notifications/mark-read", { method: "PATCH", body: JSON.stringify({ notificationIds }) }, token),
   markAllAsRead: (token) =>
     apiRequest("/notifications/mark-all-read", { method: "PATCH" }, token),
+  checkPendingPayments: (token) =>
+    apiRequest("/notifications/check-pending", { method: "POST" }, token),
 };
 
 export const uploadApi = {

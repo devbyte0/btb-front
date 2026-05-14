@@ -20,6 +20,8 @@ export default function AdminStudentsPage() {
 
   const [editStudent, setEditStudent] = useState(null);
   const [editForm, setEditForm] = useState({ name: "", email: "", phone: "" });
+  const [emailStudent, setEmailStudent] = useState(null);
+  const [emailForm, setEmailForm] = useState({ subject: "", message: "" });
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -48,6 +50,30 @@ export default function AdminStudentsPage() {
       setMessage("Student updated!");
       closeEdit();
       await load();
+    } catch (err) { setError(err.message); }
+  };
+
+  const openEmail = (student) => {
+    setEmailStudent(student);
+    setEmailForm({ subject: "", message: "" });
+  };
+
+  const closeEmail = () => { setEmailStudent(null); };
+
+  const handleSendEmail = async (e) => {
+    e.preventDefault();
+    if (!emailStudent?.email) { setError("Student has no email address"); return; }
+    setMessage(""); setError("");
+    try {
+      const res = await fetch(`${API_BASE}/emails/test`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ to: emailStudent.email, subject: emailForm.subject, message: emailForm.message }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Failed to send");
+      setMessage(`Email sent to ${emailStudent.email}!`);
+      closeEmail();
     } catch (err) { setError(err.message); }
   };
 
@@ -118,6 +144,10 @@ export default function AdminStudentsPage() {
                   <div className="mt-4 flex gap-2">
                     <button onClick={() => openEdit(student)}
                       className="flex-1 rounded-xl border border-[#f6bf86] py-2.5 text-xs font-semibold text-[#ffe4c4] transition-all hover:bg-[#f6bf86]/10">Edit</button>
+                    {student.email && (
+                      <button onClick={() => openEmail(student)}
+                        className="flex-1 rounded-xl border border-sky-500/40 py-2.5 text-xs font-semibold text-sky-300 transition-all hover:bg-sky-500/10">Email</button>
+                    )}
                     <button onClick={() => handleFullDelete(student)}
                       className="flex-1 rounded-xl border border-red-300 py-2.5 text-xs font-semibold text-red-200 transition-all hover:bg-red-300/10">Delete</button>
                   </div>
@@ -151,6 +181,35 @@ export default function AdminStudentsPage() {
                 <div className="flex gap-3 pt-2">
                   <button type="submit" className="btn-primary flex-1 rounded-xl py-3 font-semibold text-white">Save</button>
                   <button type="button" onClick={closeEdit}
+                    className="flex-1 rounded-xl border border-white/20 py-3 font-semibold text-[#e6c6a5] transition-all hover:bg-white/5">Cancel</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {emailStudent && (
+          <div className="modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+            <div className="modal-content w-full max-w-md rounded-3xl bg-[#211309] p-6 shadow-2xl overflow-y-auto max-h-[90vh]">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-black text-[#fff0df]">Send Email</h3>
+                <button onClick={closeEmail} className="flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-lg text-[#ffe7ce] hover:bg-white/20">&times;</button>
+              </div>
+              <p className="text-sm text-[#e6c6a5] mt-1">To: {emailStudent.name} ({emailStudent.email})</p>
+              <form onSubmit={handleSendEmail} className="mt-6 space-y-4">
+                <div>
+                  <label className="mb-1 block text-xs uppercase tracking-widest text-[#e6c6a5]">Subject</label>
+                  <input value={emailForm.subject} onChange={(e) => setEmailForm((p) => ({ ...p, subject: e.target.value }))}
+                    className="input-focus-ring w-full rounded-xl border border-white/15 bg-[#211309] px-4 py-3 text-[#ffe6cb] outline-none" required />
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs uppercase tracking-widest text-[#e6c6a5]">Message</label>
+                  <textarea rows={6} value={emailForm.message} onChange={(e) => setEmailForm((p) => ({ ...p, message: e.target.value }))}
+                    className="input-focus-ring w-full rounded-xl border border-white/15 bg-[#211309] px-4 py-3 text-[#ffe6cb] outline-none" required />
+                </div>
+                <div className="flex gap-3 pt-2">
+                  <button type="submit" className="btn-primary flex-1 rounded-xl py-3 font-semibold text-white">Send Email</button>
+                  <button type="button" onClick={closeEmail}
                     className="flex-1 rounded-xl border border-white/20 py-3 font-semibold text-[#e6c6a5] transition-all hover:bg-white/5">Cancel</button>
                 </div>
               </form>
