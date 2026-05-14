@@ -178,7 +178,7 @@ export default function AdminEnrollmentsPage() {
       <div className="page-enter mx-auto w-full max-w-7xl px-4 py-6 md:px-8 md:py-10">
         <Reveal variant="fade-up">
           <h1 className="text-3xl font-black text-[#fff0df]">Enrollments</h1>
-          <p className="mt-2 text-[#e6c6a5]">Full CRUD \u2022 Search \u2022 Edit \u2022 Print Official Receipt with Seal &amp; Sign</p>
+          <p className="mt-2 text-[#e6c6a5]">Full CRUD {'\u2022'} Search {'\u2022'} Edit {'\u2022'} Print Official Receipt with Seal {'\u0026'} Sign</p>
         </Reveal>
         <Reveal variant="fade-up" delay={50}><AdminSectionNav /></Reveal>
 
@@ -261,7 +261,7 @@ export default function AdminEnrollmentsPage() {
                         <p className="text-xs text-[#ffc489]">Status: {item.status}</p>
                         {item.paymentMethod && (
                           <p className="mt-1 flex items-center gap-2 text-xs text-[#e6c6a5]">
-                            {item.paymentMethod.toUpperCase()} \u2022 Trx: {item.trxId || "\u2014"} \u2022 Phone: <a href={`tel:${item.paymentPhone}`} className="font-medium text-[#ffe4c4] hover:underline">{item.paymentPhone || "\u2014"}</a>
+                            {item.paymentMethod.toUpperCase()} {'\u2022'} Trx: {item.trxId || '\u2014'} {'\u2022'} Phone: <a href={`tel:${item.paymentPhone}`} className="font-medium text-[#ffe4c4] hover:underline">{item.paymentPhone || '\u2014'}</a>
                           </p>
                         )}
                         <div className="mt-2 flex flex-wrap gap-2">

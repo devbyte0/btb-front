@@ -58,7 +58,7 @@ export default function LoginPage() {
 
           <p className="mt-6 text-center text-sm text-[#6b6b6b]">
             Don't have an account?{" "}
-            <Link href="/register" className="font-semibold text-[#d4803c] hover:underline">Register here</Link>
+            <Link href="/courses" className="font-semibold text-[#d4803c] hover:underline">Browse Courses</Link>
           </p>
         </div>
       </Reveal>

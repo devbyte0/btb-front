@@ -116,6 +116,8 @@ export const dashboardApi = {
       ...payload,
       role: "trainer",
     }),
+  createPayment: (token, payload) =>
+    apiRequest("/payments", { method: "POST", body: JSON.stringify(payload) }, token),
   createEnrollment: (token, payload) =>
     apiRequest(
       "/enrollments",
@@ -241,13 +243,9 @@ export const dashboardApi = {
       token
     ),
   deleteUser: (token, userId) =>
-    apiRequest(
-      `/users/${userId}`,
-      {
-        method: "DELETE",
-      },
-      token
-    ),
+    apiRequest(`/users/${userId}`, { method: "DELETE" }, token),
+  deleteStudentFull: (token, studentId) =>
+    apiRequest(`/users/students/${studentId}`, { method: "DELETE" }, token),
 };
 
 export const aboutUsApi = {

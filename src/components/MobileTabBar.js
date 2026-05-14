@@ -21,6 +21,7 @@ const userTabs = [
 ];
 
 const adminTabs = [
+  { href: "/dashboard/admin/students", label: "Users", icon: "👥" },
   { href: "/dashboard/admin/popups", label: "Ads", icon: "📢" },
   { href: "/dashboard/admin/announcements", label: "News", icon: "📰" },
   { href: "/dashboard/admin/enrollments", label: "Enroll", icon: "📝" },
@@ -38,7 +39,7 @@ export default function MobileTabBar() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-[#1a1009]/98 px-2 pb-1 pt-1.5 backdrop-blur-xl md:hidden safe-area-bottom">
-      <div className="mx-auto grid max-w-lg grid-cols-5 gap-1">
+      <div className={`mx-auto grid max-w-lg gap-1 ${tabs.length === 5 ? "grid-cols-5" : "grid-cols-6"}`}>
         {tabs.map((tab) => {
           if (tab.href === "/logout") {
             return (

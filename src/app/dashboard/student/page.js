@@ -31,7 +31,7 @@ export default function StudentDashboardPage() {
   const [studentBatches, setStudentBatches] = useState([]);
   const [copied, setCopied] = useState(false);
 
-  const BKASH_NUMBER = "01873886367";
+  const BKASH_NUMBER = "01911-769822";
 
   const loadStudentData = useCallback(async () => {
     setLoading(true);
@@ -393,43 +393,6 @@ export default function StudentDashboardPage() {
                     </Reveal>
                   );
                 })}
-              </div>
-            )}
-          </section>
-        </Reveal>
-
-        <Reveal variant="fade-up" delay={100}>
-          <section className="section-card mb-10 rounded-3xl p-6">
-            <h2 className="mb-6 text-2xl font-black text-[#fff0df]">Available Courses</h2>
-            {coursesError ? (
-              <p className="text-red-300">{coursesError}</p>
-            ) : loadingCourses ? (
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="rounded-2xl border border-white/10 bg-[#211309] p-6">
-                    <div className="skeleton h-5 w-3/4" />
-                    <div className="skeleton mt-2 h-10 w-full" />
-                    <div className="skeleton mt-6 h-10 w-full" />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {courses.map((course, i) => (
-                  <Reveal key={course._id} delay={i * 60} variant="fade-up">
-                    <article className="group rounded-2xl border border-white/10 bg-[#211309] p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#f39b45]/30 hover:shadow-xl">
-                      <h3 className="font-bold text-[#ffebd4] group-hover:text-[#f39b45] transition-colors">{course.title}</h3>
-                      <p className="mt-2 text-sm leading-relaxed text-[#e6c6a5]">{course.description || "Professional Barista Training"}</p>
-                      <p className="mt-6 text-lg font-semibold text-[#ffc489]">Tk{course.basePrice}</p>
-                      <button
-                        onClick={() => openPaymentModal(course)}
-                        className="btn-primary mt-6 w-full rounded-2xl py-3 font-semibold text-white"
-                      >
-                        Enroll (Min 500 Tk)
-                      </button>
-                    </article>
-                  </Reveal>
-                ))}
               </div>
             )}
           </section>

@@ -12,10 +12,10 @@ const defaultNavLinks = [
   { href: "/courses", label: "Courses" },
   { href: "/contact-us", label: "Contact Us" },
   { href: "/login", label: "Login" },
-  { href: "/register", label: "Register" },
 ];
 
 const adminNavLinks = [
+  { href: "/dashboard/admin/students", label: "Students" },
   { href: "/dashboard/admin/popups", label: "Popups" },
   { href: "/dashboard/admin/carousels", label: "Carousels" },
   { href: "/dashboard/admin/about-us", label: "About" },
